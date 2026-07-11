@@ -1,4 +1,4 @@
-package com.filecabinet.config;
+package com.filecabinet.shared.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
