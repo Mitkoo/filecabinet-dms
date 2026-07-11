@@ -4,8 +4,10 @@ import com.filecabinet.category.model.Category;
 import com.filecabinet.category.repository.CategoryRepository;
 import com.filecabinet.shared.exception.ServiceExceptions;
 import com.filecabinet.document.model.Document;
+import com.filecabinet.document.model.DocumentField;
 import com.filecabinet.document.model.DocumentStatus;
 import com.filecabinet.document.model.DocumentType;
+import com.filecabinet.document.repository.DocumentFieldRepository;
 import com.filecabinet.document.repository.DocumentRepository;
 import com.filecabinet.user.model.User;
 import com.filecabinet.user.repository.UserRepository;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
+    private final DocumentFieldRepository documentFieldRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
@@ -82,5 +85,35 @@ public class DocumentService {
             throw new ServiceExceptions.NotFoundException("Document not found: " + id);
         }
         documentRepository.deleteById(id);
+    }
+
+    public List<DocumentField> findFields(UUID documentId) {
+        return documentFieldRepository.findByDocumentId(documentId);
+    }
+
+    public DocumentField addField(UUID documentId, String fieldName, String fieldValue) {
+        Document document = findById(documentId);
+
+        DocumentField field = DocumentField.builder()
+                .document(document)
+                .fieldName(fieldName)
+                .fieldValue(fieldValue)
+                .build();
+        DocumentField saved = documentFieldRepository.save(field);
+
+        if (document.getStatus() == DocumentStatus.UPLOADED) {
+            document.setStatus(DocumentStatus.STRUCTURED);
+            documentRepository.save(document);
+        }
+        return saved;
+    }
+
+    public void removeField(UUID documentId, UUID fieldId) {
+        DocumentField field = documentFieldRepository.findById(fieldId)
+                .orElseThrow(() -> new ServiceExceptions.NotFoundException("Field not found: " + fieldId));
+        if (!field.getDocument().getId().equals(documentId)) {
+            throw new ServiceExceptions.NotFoundException("Field not found: " + fieldId);
+        }
+        documentFieldRepository.delete(field);
     }
 }
