@@ -31,7 +31,6 @@
     <i class="bi bi-exclamation-triangle"></i>Something went wrong.
   </div>
 
-  <!-- Header card: title, status, meta, workflow steps, actions -->
   <div class="card mb-4">
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
@@ -56,9 +55,12 @@
             <input type="hidden" name="status" value="REJECTED">
             <button type="submit" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x-lg me-1"></i>Reject</button>
           </form>
-          <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#editForm">
+          <a th:unless="${editOpen}" class="btn btn-outline-secondary btn-sm" th:href="@{/documents/{id}(id=${document.id}, edit=true)}">
             <i class="bi bi-pencil me-1"></i>Edit
-          </button>
+          </a>
+          <a th:if="${editOpen}" class="btn btn-outline-secondary btn-sm" th:href="@{/documents/{id}(id=${document.id})}">
+            <i class="bi bi-eye me-1"></i>Done editing
+          </a>
           <form th:action="@{/documents/{id}/delete(id=${document.id})}" method="post" onsubmit="return confirm('Delete this document?');">
             <button type="submit" class="btn btn-outline-danger btn-sm" th:disabled="${document.status == 'APPROVED'}">
               <i class="bi bi-trash me-1"></i>Delete
@@ -79,8 +81,7 @@
         <span class="badge" th:classappend="${document.status == 'APPROVED' ? 'text-bg-primary' : (document.status == 'REJECTED' ? 'text-bg-danger' : 'text-bg-light text-dark border')}">3. Reviewed</span>
       </div>
 
-      <!-- Inline edit form (collapsed by default) -->
-      <div class="collapse mt-4" id="editForm">
+      <div class="mt-4" th:if="${editOpen}">
         <hr>
         <form th:action="@{/documents/{id}/edit(id=${document.id})}" th:object="${editForm}" method="post" novalidate>
           <div class="row g-3">
@@ -107,7 +108,7 @@
           </div>
           <div class="d-flex gap-2 mt-3">
             <button type="submit" class="btn btn-primary btn-sm px-3">Save changes</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-toggle="collapse" data-bs-target="#editForm">Cancel</button>
+            <a class="btn btn-outline-secondary btn-sm px-3" th:href="@{/documents/{id}(id=${document.id})}">Cancel</a>
           </div>
         </form>
       </div>
@@ -117,7 +118,6 @@
   <div class="row g-4 mt-1">
     <div class="col-lg-8">
 
-      <!-- Structured fields -->
       <div class="card">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
           <span class="fw-semibold">Structured Fields</span>
@@ -129,7 +129,7 @@
               <tr>
                 <th>Field</th>
                 <th>Value</th>
-                <th class="text-end">Actions</th>
+                <th class="text-end" th:if="${editOpen}">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -137,7 +137,7 @@
               <tr th:each="field : ${fields}">
                 <td class="fw-semibold" th:text="${field.fieldName}">TaxID</td>
                 <td th:text="${field.fieldValue}">87-1943221</td>
-                <td class="text-end">
+                <td class="text-end" th:if="${editOpen}">
                   <form th:action="@{/documents/{id}/fields/{fieldId}/delete(id=${document.id},fieldId=${field.id})}" method="post" onsubmit="return confirm('Remove this field?');">
                     <button class="btn btn-outline-danger btn-sm" type="submit" title="Remove field"><i class="bi bi-trash"></i></button>
                   </form>
@@ -145,13 +145,13 @@
               </tr>
 
               <tr th:if="${#lists.isEmpty(fields)}">
-                <td colspan="3" class="text-muted text-center py-4">No structured fields yet. Add the key values from this document below.</td>
+                <td colspan="3" class="text-muted text-center py-4">No structured fields yet.</td>
               </tr>
 
             </tbody>
           </table>
         </div>
-        <div class="card-body border-top">
+        <div class="card-body border-top" th:if="${editOpen}">
           <form th:action="@{/documents/{id}/fields(id=${document.id})}" th:object="${fieldForm}" method="post" class="row g-2 align-items-start" novalidate>
             <div class="col-sm-4">
               <input type="text" class="form-control" th:field="*{fieldName}"
@@ -183,10 +183,32 @@
             <dt class="col-sm-4">Uploaded</dt><dd class="col-sm-8" th:text="${#temporals.format(document.uploadedOn, 'MMM d, yyyy, h:mm a')}">Jun 2, 2026, 9:14 AM</dd>
             <dt class="col-sm-4">File</dt><dd class="col-sm-8 text-break" th:text="${document.filePath}">acme-invoice.pdf</dd>
           </dl>
-          <div class="border rounded bg-light text-center text-muted p-4 mt-3">
-            <i class="bi bi-file-earmark-pdf fs-3 d-block mb-1"></i>
-            Document preview
-          </div>
+          <a class="btn btn-outline-secondary btn-sm w-100 mt-2" th:if="${fileExists}" th:href="@{/documents/{id}/file(id=${document.id})}" target="_blank">
+            <i class="bi bi-box-arrow-up-right me-1"></i>Open in new tab
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4" th:if="${fileExists}">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header bg-white fw-semibold">Document Preview</div>
+        <div class="card-body p-0">
+          <iframe th:src="@{/documents/{id}/file(id=${document.id})}" title="Document preview"
+                  style="width:100%; height:75vh; border:0;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4" th:unless="${fileExists}">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body border rounded bg-light text-center text-muted p-4">
+          <i class="bi bi-file-earmark-pdf fs-3 d-block mb-1"></i>
+          No preview available for this document.
         </div>
       </div>
     </div>

@@ -14,6 +14,11 @@ import com.filecabinet.web.interceptor.SessionAuthInterceptor;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -69,7 +75,8 @@ public class DocumentController {
     }
 
     @GetMapping("/documents/{id}")
-    public String detail(@PathVariable UUID id, HttpSession session, Model model) {
+    public String detail(@PathVariable UUID id, @RequestParam(required = false) boolean edit,
+                          HttpSession session, Model model) {
         User currentUser = currentUser(session);
         Document document = documentService.findById(id);
 
@@ -83,14 +90,34 @@ public class DocumentController {
             model.addAttribute("fieldForm", new DocumentFieldForm());
         }
         model.addAttribute("fields", documentService.findFields(id));
+        model.addAttribute("fileExists", Files.exists(Paths.get(document.getFilePath())));
+        model.addAttribute("editOpen", edit);
         return "document-detail";
+    }
+
+    @GetMapping("/documents/{id}/file")
+    @ResponseBody
+    public ResponseEntity<Resource> file(@PathVariable UUID id) throws IOException {
+        Document document = documentService.findById(id);
+        Path path = Paths.get(document.getFilePath());
+        if (!Files.exists(path)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String contentType = Files.probeContentType(path);
+        MediaType mediaType = contentType != null ? MediaType.parseMediaType(contentType) : MediaType.APPLICATION_PDF;
+
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + path.getFileName() + "\"")
+                .body(new FileSystemResource(path));
     }
 
     @PostMapping("/documents/{id}/edit")
     public String edit(@PathVariable UUID id, @Valid @ModelAttribute("editForm") UploadForm form, BindingResult bindingResult,
                         HttpSession session, Model model) {
         if (bindingResult.hasErrors()) {
-            return detail(id, session, model);
+            return detail(id, true, session, model);
         }
 
         documentService.update(id, form.getTitle(), form.getDocumentType(), documentService.findById(id).getFilePath(), form.getCategoryId());
@@ -115,7 +142,7 @@ public class DocumentController {
     public String addField(@PathVariable UUID id, @Valid @ModelAttribute("fieldForm") DocumentFieldForm form, BindingResult bindingResult,
                             HttpSession session, Model model) {
         if (bindingResult.hasErrors()) {
-            return detail(id, session, model);
+            return detail(id, false, session, model);
         }
 
         documentService.addField(id, form.getFieldName(), form.getFieldValue());

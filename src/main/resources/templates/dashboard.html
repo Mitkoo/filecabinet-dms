@@ -103,7 +103,7 @@
             <td class="text-end">
               <div class="btn-group btn-group-sm">
                 <a class="btn btn-outline-secondary" title="View" th:href="@{/documents/{id}(id=${document.id})}"><i class="bi bi-eye"></i></a>
-                <a class="btn btn-outline-secondary" title="Edit" th:href="@{/documents/{id}(id=${document.id})}"><i class="bi bi-pencil"></i></a>
+                <a class="btn btn-outline-secondary" title="Edit" th:href="@{/documents/{id}(id=${document.id}, edit=true)}"><i class="bi bi-pencil"></i></a>
                 <form th:action="@{/documents/{id}/delete(id=${document.id})}" method="post" onsubmit="return confirm('Delete this document?');">
                   <button class="btn btn-outline-danger" title="Delete" type="submit"><i class="bi bi-trash"></i></button>
                 </form>
