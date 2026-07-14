@@ -183,7 +183,7 @@
 
       </form>
 
-      <nav class="mt-4" aria-label="Document pagination" th:if="${totalPages > 1}">
+      <nav class="mt-4" aria-label="Document pagination">
         <ul class="pagination justify-content-center mb-0">
           <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
             <a class="page-link" th:href="@{/documents(q=${param.q}, type=${param.type}, categoryId=${param.categoryId}, status=${param.status}, owner=${param.owner}, scope=${param.scope}, sort=${sort}, dir=${dir}, page=${currentPage - 1})}">Previous</a>

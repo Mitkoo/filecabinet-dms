@@ -33,10 +33,10 @@
         </li>
       </ul>
       <ul class="navbar-nav align-items-lg-center gap-lg-3">
-        <li class="nav-item" th:if="${unreadCommentCount != null and unreadCommentCount > 0}">
+        <li class="nav-item">
           <a class="nav-link position-relative" th:href="@{/workflows/inbox}" title="Unread workflow comments">
             <i class="bi bi-bell"></i>
-            <span class="badge rounded-pill text-bg-danger" th:text="${unreadCommentCount}">3</span>
+            <span class="badge rounded-pill text-bg-danger" th:if="${unreadCommentCount != null and unreadCommentCount > 0}" th:text="${unreadCommentCount}">3</span>
           </a>
         </li>
         <li class="nav-item">
