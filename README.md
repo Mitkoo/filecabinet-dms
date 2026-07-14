@@ -2,7 +2,8 @@
 
 Individual project for the Spring Fundamentals course. It is a simple document management system where users can upload documents (invoices, contracts, receipts, legal filings), organize them into categories, add extracted data fields to them, and send them through a review/approval workflow before they are marked as paid.
 
-<img width="2482" height="1064" alt="image" src="https://github.com/user-attachments/assets/ea7bc6ea-d118-4923-a049-4a7cc8409d65" />
+<img width="2482" height="997" alt="image" src="https://github.com/user-attachments/assets/36903eaa-2ab1-45e7-8f2e-a4423300d298" />
+
 
 ## Tech stack
 
