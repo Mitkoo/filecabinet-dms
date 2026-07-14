@@ -1,5 +1,5 @@
 package com.filecabinet.document.model;
 
 public enum DocumentType {
-    INVOICE, CONTRACT, RECEIPT, LEGAL_FILING, OTHER
+    INVOICE, CONTRACT, RECEIPT, OTHER
 }

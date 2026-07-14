@@ -20,8 +20,25 @@
             <i class="bi bi-cloud-upload me-1"></i>Upload Document
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" th:classappend="${activePage == 'inbox'} ? 'active'" th:href="@{/workflows/inbox}">
+            <i class="bi bi-inbox me-1"></i>My Reviews
+            <span class="badge rounded-pill text-bg-danger ms-1" th:if="${pendingReviewCount != null and pendingReviewCount > 0}" th:text="${pendingReviewCount}">2</span>
+          </a>
+        </li>
+        <li class="nav-item" th:if="${currentUser.role.name() == 'ADMIN'}">
+          <a class="nav-link" th:classappend="${activePage == 'users'} ? 'active'" th:href="@{/users}">
+            <i class="bi bi-people me-1"></i>Users
+          </a>
+        </li>
       </ul>
       <ul class="navbar-nav align-items-lg-center gap-lg-3">
+        <li class="nav-item" th:if="${unreadCommentCount != null and unreadCommentCount > 0}">
+          <a class="nav-link position-relative" th:href="@{/workflows/inbox}" title="Unread workflow comments">
+            <i class="bi bi-bell"></i>
+            <span class="badge rounded-pill text-bg-danger" th:text="${unreadCommentCount}">3</span>
+          </a>
+        </li>
         <li class="nav-item">
           <span class="badge text-bg-primary" th:text="${currentUser.role}">ADMIN</span>
         </li>
@@ -32,6 +49,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li><h6 class="dropdown-header" th:text="${currentUser.email}">jane.doe@company.com</h6></li>
+            <li><a class="dropdown-item" th:href="@{/profile}"><i class="bi bi-person me-2"></i>My Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <form th:action="@{/logout}" method="post">
@@ -45,11 +63,30 @@
   </div>
 </nav>
 
-<th:block th:fragment="statusBadge(status)" th:switch="${status}">
+<th:block th:fragment="statusBadge(status)" th:switch="${status.name()}">
   <span th:case="'UPLOADED'" class="badge text-bg-secondary" th:text="${status}">UPLOADED</span>
   <span th:case="'STRUCTURED'" class="badge text-bg-warning" th:text="${status}">STRUCTURED</span>
+  <span th:case="'IN_REVIEW'" class="badge text-bg-info" th:text="${status}">IN_REVIEW</span>
   <span th:case="'APPROVED'" class="badge text-bg-success" th:text="${status}">APPROVED</span>
   <span th:case="'REJECTED'" class="badge text-bg-danger" th:text="${status}">REJECTED</span>
+  <span th:case="'PAID'" class="badge" style="background-color:#6f42c1;color:#fff;" th:text="${status}">PAID</span>
+  <span th:case="'ARCHIVED'" class="badge text-bg-dark" th:text="${status}">ARCHIVED</span>
+  <span th:case="*" class="badge text-bg-light" th:text="${status}">STATUS</span>
+</th:block>
+
+<th:block th:fragment="workflowStatusBadge(status)" th:switch="${status.name()}">
+  <span th:case="'IN_PROGRESS'" class="badge text-bg-info" th:text="${status}">IN_PROGRESS</span>
+  <span th:case="'APPROVED'" class="badge text-bg-success" th:text="${status}">APPROVED</span>
+  <span th:case="'REJECTED'" class="badge text-bg-danger" th:text="${status}">REJECTED</span>
+  <span th:case="'CANCELLED'" class="badge text-bg-secondary" th:text="${status}">CANCELLED</span>
+  <span th:case="*" class="badge text-bg-light" th:text="${status}">STATUS</span>
+</th:block>
+
+<th:block th:fragment="stepStatusBadge(status)" th:switch="${status.name()}">
+  <span th:case="'PENDING'" class="badge text-bg-light text-dark border">Waiting</span>
+  <span th:case="'APPROVED'" class="badge text-bg-success">Approved</span>
+  <span th:case="'REJECTED'" class="badge text-bg-danger">Rejected</span>
+  <span th:case="'SKIPPED'" class="badge text-bg-secondary">Skipped</span>
   <span th:case="*" class="badge text-bg-light" th:text="${status}">STATUS</span>
 </th:block>
 
