@@ -2,7 +2,7 @@
 
 Individual project for the Spring Fundamentals course. It is a simple document management system where users can upload documents (invoices, contracts, receipts, legal filings), organize them into categories, add extracted data fields to them, and send them through a review/approval workflow before they are marked as paid.
 
-<img width="2496" height="1048" alt="image" src="https://github.com/user-attachments/assets/67cd76f6-40bd-45a8-b2cc-14c6f958c5bc" />
+<img width="2479" height="1033" alt="image" src="https://github.com/user-attachments/assets/db85b018-f4df-46d0-a5c9-aff45ab6e7f0" />
 
 ## Tech stack
 
@@ -25,11 +25,15 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 - WorkflowEvent - a log entry for what happened in a workflow (decision, comment, reminder)
 - WorkflowRead - keeps track of which workflows a user has already seen/read
 
+<img width="2502" height="984" alt="image" src="https://github.com/user-attachments/assets/9aeb8b4e-d8b9-48d8-a4ec-ee4de2a82154" />
+
 ## Roles
 
 - CLERK - default role, can upload/edit/delete their own documents and send them for review
 - MANAGER, BUYER, ACCOUNTANT - different reviewer roles used in the invoice approval pipeline
 - ADMIN - can manage everything, approve/reject any document, manage users
+
+  <img width="2498" height="764" alt="image" src="https://github.com/user-attachments/assets/76f26b25-f4c8-4cf3-bc53-cfd4687589c8" />
 
 ## Main features / functionalities
 
@@ -44,6 +48,8 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 - Mark an approved invoice as paid
 - Admin can view/manage all users and their roles
 - Edit your own profile / reset your password if you forget it
+
+  <img width="2480" height="1275" alt="image" src="https://github.com/user-attachments/assets/7b5134e0-c415-4de3-805b-fc18659a52e8" />
 
 ## Security
 
