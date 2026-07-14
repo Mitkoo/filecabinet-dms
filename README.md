@@ -2,6 +2,8 @@
 
 Individual project for the Spring Fundamentals course. It is a simple document management system where users can upload documents (invoices, contracts, receipts, legal filings), organize them into categories, add extracted data fields to them, and send them through a review/approval workflow before they are marked as paid.
 
+<img width="2482" height="1064" alt="image" src="https://github.com/user-attachments/assets/ea7bc6ea-d118-4923-a049-4a7cc8409d65" />
+
 ## Tech stack
 
 - Java 17
@@ -23,11 +25,17 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 - WorkflowEvent - a log entry for what happened in a workflow (decision, comment, reminder)
 - WorkflowRead - keeps track of which workflows a user has already seen/read
 
+
+<img width="2502" height="984" alt="image" src="https://github.com/user-attachments/assets/9aeb8b4e-d8b9-48d8-a4ec-ee4de2a82154" />
+
 ## Roles
 
 - CLERK - default role, can upload/edit/delete their own documents and send them for review
 - MANAGER, BUYER, ACCOUNTANT - different reviewer roles used in the invoice approval pipeline
 - ADMIN - can manage everything, approve/reject any document, manage users
+
+
+  <img width="2498" height="764" alt="image" src="https://github.com/user-attachments/assets/76f26b25-f4c8-4cf3-bc53-cfd4687589c8" />
 
 ## Main features / functionalities
 
@@ -42,6 +50,9 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 - Mark an approved invoice as paid
 - Admin can view/manage all users and their roles
 - Edit your own profile / reset your password if you forget it
+- Rich embedded invoice documents flow, with full approval chain per role and final payment functionality from the ACCOUNTANT role.
+
+  <img width="2480" height="1275" alt="image" src="https://github.com/user-attachments/assets/7b5134e0-c415-4de3-805b-fc18659a52e8" />
 
 ## Security
 
@@ -58,6 +69,8 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 4. App will be available on `http://localhost:8081`.
 
 On first run, some sample data (users, categories, documents) is generated automatically so the app is not empty.
+
+You can use the DEMO account to view the app. Also, you can create and reset the password of account easily by just providing the user name, email and the new password, then it is set. It is useful to have all the types of demo accounts CLERK, BUYER, MANAGER and ACCOUNTANT to try the whole rich invoice processing document flow.
 
 ## Future improvements
 
