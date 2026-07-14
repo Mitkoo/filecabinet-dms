@@ -35,17 +35,4 @@ public class CategoryService {
                 .orElseThrow(() -> new ServiceExceptions.NotFoundException("Category not found: " + id));
     }
 
-    public Category update(UUID id, String name, String description) {
-        Category category = findById(id);
-        category.setName(name);
-        category.setDescription(description);
-        return categoryRepository.save(category);
-    }
-
-    public void delete(UUID id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new ServiceExceptions.NotFoundException("Category not found: " + id);
-        }
-        categoryRepository.deleteById(id);
-    }
 }

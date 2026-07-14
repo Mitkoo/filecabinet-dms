@@ -53,10 +53,6 @@ public class DocumentService {
         return documentRepository.findByOwnerId(ownerId);
     }
 
-    public List<Document> findByCategory(UUID categoryId) {
-        return documentRepository.findByCategoryId(categoryId);
-    }
-
     public Document findById(UUID id) {
         return documentRepository.findById(id)
                 .orElseThrow(() -> new ServiceExceptions.NotFoundException("Document not found: " + id));
@@ -84,6 +80,7 @@ public class DocumentService {
         if (!documentRepository.existsById(id)) {
             throw new ServiceExceptions.NotFoundException("Document not found: " + id);
         }
+        documentFieldRepository.deleteAll(documentFieldRepository.findByDocumentId(id));
         documentRepository.deleteById(id);
     }
 

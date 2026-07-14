@@ -11,6 +11,4 @@ import java.util.UUID;
 public interface DocumentRepository extends JpaRepository<Document, UUID> {
 
     List<Document> findByOwnerId(UUID ownerId);
-
-    List<Document> findByCategoryId(UUID categoryId);
 }
