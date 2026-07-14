@@ -25,6 +25,7 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 - WorkflowEvent - a log entry for what happened in a workflow (decision, comment, reminder)
 - WorkflowRead - keeps track of which workflows a user has already seen/read
 
+
 <img width="2502" height="984" alt="image" src="https://github.com/user-attachments/assets/9aeb8b4e-d8b9-48d8-a4ec-ee4de2a82154" />
 
 ## Roles
@@ -32,6 +33,7 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 - CLERK - default role, can upload/edit/delete their own documents and send them for review
 - MANAGER, BUYER, ACCOUNTANT - different reviewer roles used in the invoice approval pipeline
 - ADMIN - can manage everything, approve/reject any document, manage users
+
 
   <img width="2498" height="764" alt="image" src="https://github.com/user-attachments/assets/76f26b25-f4c8-4cf3-bc53-cfd4687589c8" />
 
@@ -48,6 +50,7 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 - Mark an approved invoice as paid
 - Admin can view/manage all users and their roles
 - Edit your own profile / reset your password if you forget it
+
 
   <img width="2480" height="1275" alt="image" src="https://github.com/user-attachments/assets/7b5134e0-c415-4de3-805b-fc18659a52e8" />
 
