@@ -45,4 +45,14 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
+
+    private String fullName;
+
+    private String phone;
+
+    private String jobTitle;
+
+    private String companyName;
+
+    private String companyAddress;
 }

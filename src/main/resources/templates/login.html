@@ -40,12 +40,28 @@
               <label class="form-label" for="username">Username</label>
               <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="jane.doe" autocomplete="username">
             </div>
-            <div class="mb-4">
+            <div class="mb-2">
               <label class="form-label" for="password">Password</label>
               <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="••••••••" autocomplete="current-password">
             </div>
+            <div class="text-end mb-3">
+              <a class="small" th:href="@{/forgot-password}">Forgot password?</a>
+            </div>
             <button type="submit" class="btn btn-primary w-100 btn-lg">Sign in</button>
           </form>
+
+          <div class="d-flex align-items-center gap-2 my-3">
+            <hr class="flex-grow-1">
+            <span class="text-muted small">or</span>
+            <hr class="flex-grow-1">
+          </div>
+
+          <form th:action="@{/login}" method="post">
+            <input type="hidden" name="username" value="demo">
+            <input type="hidden" name="password" value="demo1234">
+            <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-eye me-2"></i>Try the demo account</button>
+          </form>
+          <p class="text-center text-muted small mt-2 mb-0">No sign-up needed — explores a pre-loaded sample workspace (username: <code>demo</code>, password: <code>demo1234</code>)</p>
 
           <p class="text-center text-muted small mt-4 mb-0">Don't have an account? <a th:href="@{/register}">Create one</a></p>
         </div>

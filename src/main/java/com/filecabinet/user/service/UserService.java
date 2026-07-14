@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,21 +48,39 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> findByRole(Role role) {
+        return userRepository.findByRole(role).stream()
+                .sorted(Comparator.comparing(User::getUsername))
+                .toList();
+    }
+
     public User findById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ServiceExceptions.NotFoundException("User not found: " + id));
     }
 
-    public User updateEmail(UUID id, String email) {
+    public User updateProfile(UUID id, String fullName, String phone, String jobTitle, String companyName, String companyAddress) {
         User user = findById(id);
-        user.setEmail(email);
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setJobTitle(jobTitle);
+        user.setCompanyName(companyName);
+        user.setCompanyAddress(companyAddress);
         return userRepository.save(user);
     }
 
-    public User changePassword(UUID id, String newRawPassword) {
+    public User updateRole(UUID id, Role role) {
         User user = findById(id);
-        user.setPasswordHash(passwordEncoder.encode(newRawPassword));
+        user.setRole(role);
         return userRepository.save(user);
+    }
+
+    public void resetPassword(String username, String email, String newRawPassword) {
+        User user = userRepository.findByUsername(username)
+                .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                .orElseThrow(() -> new ServiceExceptions.InvalidStateException("No account matches that username and email."));
+        user.setPasswordHash(passwordEncoder.encode(newRawPassword));
+        userRepository.save(user);
     }
 
     public void delete(UUID id) {
