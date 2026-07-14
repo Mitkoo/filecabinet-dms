@@ -50,7 +50,7 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 - Mark an approved invoice as paid
 - Admin can view/manage all users and their roles
 - Edit your own profile / reset your password if you forget it
-
+- Rich embedded invoice documents flow, with full approval chain per role and final payment functionality from the ACCOUNTANT role.
 
   <img width="2480" height="1275" alt="image" src="https://github.com/user-attachments/assets/7b5134e0-c415-4de3-805b-fc18659a52e8" />
 
@@ -69,6 +69,8 @@ Individual project for the Spring Fundamentals course. It is a simple document m
 4. App will be available on `http://localhost:8081`.
 
 On first run, some sample data (users, categories, documents) is generated automatically so the app is not empty.
+
+You can use the DEMO account to view the app. Also, you can create and reset the password of account easily by just providing the user name, email and the new password, then it is set. It is useful to have all the types of demo accounts CLERK, BUYER, MANAGER and ACCOUNTANT to try the whole rich invoice processing document flow.
 
 ## Future improvements
 
