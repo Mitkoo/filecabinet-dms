@@ -11,6 +11,7 @@ import com.filecabinet.user.service.UserService;
 import com.filecabinet.web.interceptor.SessionAuthInterceptor;
 import com.filecabinet.workflow.model.ReviewStep;
 import com.filecabinet.workflow.model.ReviewWorkflow;
+import com.filecabinet.workflow.model.WorkflowEvent;
 import com.filecabinet.workflow.service.WorkflowService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -111,7 +112,9 @@ public class WorkflowController {
                 currentStep.map(s -> s.getReviewer().getId().equals(currentUser.getId())).orElse(false));
         model.addAttribute("canManage",
                 currentUser.getRole() == Role.ADMIN || workflow.getInitiator().getId().equals(currentUser.getId()));
-        model.addAttribute("unreadCommentCount", workflowService.countUnreadComments(currentUser.getId()));
+        List<WorkflowEvent> unreadNotifications = workflowService.findUnreadNotifications(currentUser.getId());
+        model.addAttribute("unreadNotifications", unreadNotifications.stream().limit(8).toList());
+        model.addAttribute("unreadNotificationCount", unreadNotifications.size());
         return "workflow-detail";
     }
 
@@ -172,7 +175,8 @@ public class WorkflowController {
         model.addAttribute("workflows", workflowService.findActionableForUser(currentUser.getId()));
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("activePage", "inbox");
-        model.addAttribute("unreadCommentCount", 0);
+        model.addAttribute("unreadNotifications", List.<WorkflowEvent>of());
+        model.addAttribute("unreadNotificationCount", 0);
         return "workflow-inbox";
     }
 

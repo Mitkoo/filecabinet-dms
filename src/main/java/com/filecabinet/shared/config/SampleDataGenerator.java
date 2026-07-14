@@ -10,6 +10,7 @@ import com.filecabinet.user.model.Role;
 import com.filecabinet.user.model.User;
 import com.filecabinet.user.repository.UserRepository;
 import com.filecabinet.user.service.UserService;
+import com.filecabinet.workflow.model.ReviewWorkflow;
 import com.filecabinet.workflow.service.WorkflowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -96,8 +97,10 @@ public class SampleDataGenerator implements CommandLineRunner {
 
             Document maintenance = seedDocument("Server Maintenance Contract — CloudOps Inc", DocumentType.CONTRACT, categories.get(2), clerk);
             documentService.addField(maintenance.getId(), "Vendor", "CloudOps Inc");
-            workflowService.startWorkflow(maintenance.getId(), admin.getId(), List.of(demo.getId(), dimi.getId()),
-                    "Please review this maintenance contract before renewal.");
+            ReviewWorkflow maintenanceWorkflow = workflowService.startWorkflow(maintenance.getId(), admin.getId(),
+                    List.of(demo.getId(), dimi.getId()), "Please review this maintenance contract before renewal.");
+            workflowService.addComment(maintenanceWorkflow.getId(), admin.getId(),
+                    "Let me know if you need the vendor's latest SLA before you decide.");
 
             Document inspection = seedDocument("Facility Inspection Report — Northside Warehouse", DocumentType.OTHER, categories.get(3), admin);
             documentService.addField(inspection.getId(), "Inspector", "Northside Safety Co.");

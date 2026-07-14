@@ -33,11 +33,35 @@
         </li>
       </ul>
       <ul class="navbar-nav align-items-lg-center gap-lg-3">
-        <li class="nav-item">
-          <a class="nav-link position-relative" th:href="@{/workflows/inbox}" title="Unread workflow comments">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle position-relative" href="#" role="button" data-bs-toggle="dropdown" title="Notifications">
             <i class="bi bi-bell"></i>
-            <span class="badge rounded-pill text-bg-danger" th:if="${unreadCommentCount != null and unreadCommentCount > 0}" th:text="${unreadCommentCount}">3</span>
+            <span class="badge rounded-pill text-bg-danger" th:if="${unreadNotificationCount != null and unreadNotificationCount > 0}" th:text="${unreadNotificationCount}">3</span>
           </a>
+          <ul class="dropdown-menu dropdown-menu-end" style="min-width: 320px;">
+            <li th:if="${unreadNotifications == null or #lists.isEmpty(unreadNotifications)}">
+              <span class="dropdown-item-text text-muted small">No new notifications</span>
+            </li>
+            <li th:each="event : ${unreadNotifications}">
+              <a class="dropdown-item" th:href="@{/workflows/{id}(id=${event.workflow.id})}">
+                <div class="fw-semibold small" th:switch="${event.eventType.name()}">
+                  <span th:case="'STARTED'"><i class="bi bi-signpost-split me-1"></i>New review request</span>
+                  <span th:case="'COMMENT'"><i class="bi bi-chat-left-text me-1"></i>New comment</span>
+                  <span th:case="'REMINDER_SENT'"><i class="bi bi-alarm me-1"></i>Reminder</span>
+                  <span th:case="'STEP_APPROVED'"><i class="bi bi-check-circle me-1"></i>Step approved</span>
+                  <span th:case="'STEP_REJECTED'"><i class="bi bi-x-circle me-1"></i>Step rejected</span>
+                  <span th:case="'COMPLETED'"><i class="bi bi-flag me-1"></i>Workflow completed</span>
+                  <span th:case="'CANCELLED'"><i class="bi bi-slash-circle me-1"></i>Workflow cancelled</span>
+                  <span th:case="*" th:text="${event.eventType}">Update</span>
+                </div>
+                <div class="text-muted small text-truncate" style="max-width: 280px;" th:text="${event.workflow.document.title}">Document title</div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item text-center small" th:href="@{/workflows/inbox}">View all reviews</a>
+            </li>
+          </ul>
         </li>
         <li class="nav-item">
           <span class="badge text-bg-primary" th:text="${currentUser.role}">ADMIN</span>

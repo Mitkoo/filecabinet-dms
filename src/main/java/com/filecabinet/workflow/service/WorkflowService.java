@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -246,22 +248,23 @@ public class WorkflowService {
         }
     }
 
-    public int countUnreadComments(UUID userId) {
-        int total = 0;
+    public List<WorkflowEvent> findUnreadNotifications(UUID userId) {
+        List<WorkflowEvent> notifications = new ArrayList<>();
         for (ReviewWorkflow workflow : reviewWorkflowRepository.findAll()) {
             if (!isParticipant(workflow, userId)) {
                 continue;
             }
             LocalDateTime lastRead = workflowReadRepository.findByWorkflowIdAndReaderId(workflow.getId(), userId)
                     .map(WorkflowRead::getLastReadOn)
-                    .orElse(workflow.getCreatedOn());
-            total += (int) getEvents(workflow.getId()).stream()
-                    .filter(e -> e.getEventType() == WorkflowEventType.COMMENT)
+                    .orElse(workflow.getCreatedOn().minusSeconds(1));
+            getEvents(workflow.getId()).stream()
                     .filter(e -> e.getActor() == null || !e.getActor().getId().equals(userId))
                     .filter(e -> e.getCreatedOn().isAfter(lastRead))
-                    .count();
+                    .forEach(notifications::add);
         }
-        return total;
+        return notifications.stream()
+                .sorted(Comparator.comparing(WorkflowEvent::getCreatedOn).reversed())
+                .toList();
     }
 
     public boolean hasInvolvement(UUID documentId, UUID userId) {
